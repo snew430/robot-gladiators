@@ -1,12 +1,11 @@
 var playerName = window.prompt("What is your robot's name?");
 var playerHealth = 100;
 var playerAttack = 10;
+var playerMoney = 10;
 
 var enemyName = "Roborto";
 var enemyHealth = 50;
 var enemyAttack = 12;
-
-var playerMoney = 10;
 
 // This creates a function called "fight"
 
