@@ -32,21 +32,29 @@ var fight = function (enemyName) {
       if (confirmSkip) {
         window.alert(playerName + " has decided to skip the fight. Goodbye!");
         // subtract money from playerMoney for skipping
-        playerMoney = playerMoney - 10;
+        playerMoney = Math.max(0, playerMoney - 10);
         console.log("playerMoney", playerMoney);
         break;
       }
     }
     //If player chooses to fight, then fight
     else if (promptFight === "fight" || promptFight === "FIGHT") {
+      // generate random damage based on players attack power
+      var damage = randomNumber(playerAttack - 3, playerAttack + 1);
       // remove enemy's health by subtracting the amount set in the playerAttack variable
-      enemyHealth = enemyHealth - playerAttack;
+      enemyHealth = Math.max(0, enemyHealth - damage);
+
+      if (damage > playerAttack) {
+        console.log("====CRITICAL HIT====");
+      }
 
       console.log(
         playerName +
           " attacked " +
           enemyName +
-          ". " +
+          " for " +
+          damage +
+          " damage. " +
           enemyName +
           " now has " +
           enemyHealth +
@@ -64,14 +72,21 @@ var fight = function (enemyName) {
         window.alert(enemyName + " still has " + enemyHealth + " health left.");
       }
 
+      var damage = randomNumber(enemyAttack - 3, playerAttack + 1);
       // remove player's health by subtracting the amount set in the enemyAttack variable
-      playerHealth = playerHealth - enemyAttack;
+      playerHealth = Math.max(0, playerHealth - damage);
+
+      if (damage > playerAttack) {
+        console.log("====CRITICAL HIT====");
+      }
 
       console.log(
         enemyName +
           " attacked " +
           playerName +
-          ". " +
+          " for " +
+          damage +
+          " damage. " +
           playerName +
           " now has " +
           playerHealth +
@@ -105,7 +120,7 @@ var startGame = function () {
 
       var pickedEnemyName = enemyNames[i];
 
-      enemyHealth = 50;
+      enemyHealth = randomNumber(40, 60);
 
       fight(pickedEnemyName);
       // if we are not at the last enemy of the array
@@ -188,6 +203,12 @@ var shop = function () {
       shop();
       break;
   }
+};
+
+// function to generate a random numeric value
+var randomNumber = function (min, max) {
+  var value = Math.floor(Math.random() * (max - min + 1) + min);
+  return value;
 };
 
 startGame();
