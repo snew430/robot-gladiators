@@ -35,7 +35,11 @@ var playerInfo = {
   // REFILL HEALTH
   refillHealth: function () {
     if (this.money >= 7) {
-      alert("Refilling player's health by 20 for 0 dollars.");
+      alert(
+        "Refilling player's health by 20 for 7 dollars. You now have " +
+          playerInfo.money +
+          " dollars left."
+      );
       this.health += 20;
       this.money -= 7;
     } else {
@@ -46,7 +50,11 @@ var playerInfo = {
   // UPGRADE ATTACK
   upgradeAttack: function () {
     if (this.money >= 7) {
-      alert("Refilling player's health by 20 for 0 dollars.");
+      alert(
+        "Refilling player's health by 20 for 7 dollars. You now have " +
+          playerInfo.money +
+          " dollars left."
+      );
       this.attack += 6;
       this.money -= 7;
     } else {
@@ -80,10 +88,7 @@ var fightOrSkip = function () {
     "Would you like to FIGHT or SKIP this battle?  Enter 'FIGHT' or 'SKIP' to choose"
   );
   promptFight = promptFight.toLowerCase();
-  if (promptFight === "" || promptFight === null) {
-    alert("You need to provide a valid answer! Please try again...");
-    return fightOrSkip();
-  }
+
   if (promptFight === "skip") {
     var confirmSkip = confirm("Are you sure you'd like to quit?");
     if (confirmSkip) {
@@ -91,10 +96,13 @@ var fightOrSkip = function () {
       playerInfo.money = Math.max(0, playerInfo.money - 10);
       return true;
     }
+  } else if (promptFight === "fight") {
+    return false;
+  } else {
+    alert("You need to provide a valid answer! Please try again...");
+    return fightOrSkip();
   }
 };
-
-// ===========================================================
 
 // FIGHT FUNCTION
 var fight = function (enemy) {
@@ -179,8 +187,6 @@ var fight = function (enemy) {
   }
 };
 
-// ===========================================================
-
 // START GAME FUNCTION
 var startGame = function () {
   // reset player stats
@@ -229,16 +235,27 @@ var startGame = function () {
 
 // END GAME FUNCTION
 var endGame = function () {
-  // if player is still alive, player wins!
-  if (playerInfo.health > 0) {
+  alert("The game has now ended.  Let's see how you did!");
+  var highScore = localStorage.getItem("highscore");
+  if (highScore === null) {
+    highScore = 0;
+  }
+  if (playerInfo.money > highScore) {
+    localStorage.setItem("highscore", playerInfo.money);
+    localStorage.setItem("name", playerInfo.name);
+
     alert(
-      "Great job, you've survived the game! You now have a score of " +
-        playerInfo.money +
-        "."
+      playerInfo.name + " now has the high score of " + playerInfo.money + "!"
     );
   } else {
-    alert("You've lost your robot in battle.");
+    alert(
+      playerInfo.name +
+        " did not beat the high score of " +
+        highScore +
+        ". Maybe next time!"
+    );
   }
+
   // ask player if they's like to play again
   var playAgainConfirm = confirm("Would you like to play again?");
   if (playAgainConfirm) {
@@ -253,7 +270,9 @@ var endGame = function () {
 var shop = function () {
   // ask player what they would like to do
   var shopOptionPrompt = prompt(
-    "Would you like to REFILL your health, UPGRADE your attack, or LEAVE the store?  Enter 1 to REFILL, 2 for UPGRADE, or 3 to LEAVE"
+    "You currently have " +
+      playerInfo.money +
+      " dollars. Would you like to REFILL your health, UPGRADE your attack, or LEAVE the store?  Enter 1 to REFILL, 2 for UPGRADE, or 3 to LEAVE"
   );
   shopOptionPrompt = parseInt(shopOptionPrompt);
   // use switch to carry out action
